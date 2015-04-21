@@ -15,13 +15,18 @@ fun1 <- function(){
     mean.date.step<-mean(date.step$steps,na.rm=TRUE)
     med.date.step<-median(date.step$steps,na.rm=TRUE)
     
-    print(paste("The mean of the total number of steps taken per day is",
-                mean.date.step))
-    print(paste("The median of the total number of steps taken per day is",
-                med.date.step))
+    print(paste("The mean of the total number of steps taken per day is ",
+                mean.date.step, ".", sep=""))
+    print(paste("The median of the total number of steps taken per day is ",
+                med.date.step, ".", sep=""))
     
     
-    interval.step<-dcast(melt.data, interval ~ "steps", mean, na.rm=TRUE)
+    interval.step<-dcast(melt.data, interval ~ "steps", mean,
+                         na.rm=TRUE)
+    max.interval<-interval.step[interval.step$steps == 
+                                    max(interval.step[,2]),1]
     
     plot(interval.step$interval,interval.step$steps,type="l")
+    print(paste("The interval of", max.interval, 
+                "contains the max number of steps."))
 }
