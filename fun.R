@@ -1,4 +1,5 @@
 fun1 <- function(){  
+    Sys.setlocale("LC_ALL","English")
     library(reshape2)
     
     unzip("activity.zip")
@@ -49,7 +50,14 @@ fun1 <- function(){
     ##fill_data <- fill_data[order(fill_data$date,fill_data$interval),]
     ##row.names(fill_data) <- NULL
     
-    melt.fill.data<-melt(fill_data,id=c("date","interval"),
+    week <- factor(weekdays(fill_data$date), 
+                   c("Monday", "Tuesday", "Wednesday", "Thursday", 
+                     "Friday", "Saturday", "Sunday"))
+    levels(week)[1:5]<-"weekday"
+    levels(week)[2:3]<-"weekend"
+    fill_data <- cbind(fill_data,week)
+    
+    melt.fill.data<-melt(fill_data,id=c("date","interval","week"),
                          measure.vars=c("steps"))
     date.step.f<-dcast(melt.fill.data,date ~ "steps", sum)
     
@@ -65,4 +73,12 @@ fun1 <- function(){
                 mean.date.step.f, ".", sep=""))
     print(paste("The median of the total number of steps taken per day is ",
                 med.date.step.f, ".", sep=""))
+    
+    weekday.interval.f<-dcast(subset(melt.fill.data,melt.fill.data$week=="weekday"), 
+                          interval ~ "steps", mean)
+    weekend.interval.f<-dcast(subset(melt.fill.data,melt.fill.data$week=="weekend"), 
+                              interval ~ "steps", mean)
+    par(mfrow=c(2,1))
+    with(weekday.interval.f,plot(interval,steps,type="l"))
+    with(weekend.interval.f,plot(interval,steps,type="l"))
 }
