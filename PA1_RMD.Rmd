@@ -28,25 +28,40 @@ date.step<-dcast(melt.data,date ~ "steps", sum)
 with(date.step,hist(steps,main="The Total Number of Steps Taken Each Day"))
 
 mean.date.step<-mean(date.step$steps,na.rm=TRUE)
-med.date.step<-median(date.step$steps,na.rm=TRUE)
-    
-print(paste("The mean of the total number of steps taken per day is ", mean.date.step, ".", sep=""))
-print(paste("The median of the total number of steps taken per day is ", med.date.step, ".", sep=""))
+med.date.step<-median(date.step$steps,na.rm=TRUE)    
 ```
+
+The mean of the total number of steps taken per day is `r mean.date.step`.
+
+The median of the total number of steps taken per day is `r med.date.step`.
 
 ## What is the average daily activity pattern?
 
 ```{r echo=TRUE}
 interval.step<-dcast(melt.data, interval ~ "steps", mean, na.rm=TRUE)
-max.interval<-interval.step[interval.step$steps == max(interval.step[,2]),1]
-
 with(interval.step,plot(interval,steps,type="l", main="The Average Number of Steps Taken per 5-minute Interval"))
-
-print(paste("The interval of", max.interval, "contains the max number of steps."))
-print(paste("The total number of missing values in the dataset is:", nrow(subset(act_data,is.na(act_data$steps)))))
 ```
 
+```{r echo=TRUE}
+max.interval<-interval.step[interval.step$steps == max(interval.step[,2]),1]
+```
+
+The interval of `r max.interval` contains the max number of steps.
+
 ## Imputing missing values
+```{r echo=TRUE}
+missing.rows<-subset(act_data,is.na(act_data$steps))
+nrow.missing<-nrow(missing.rows)
+summary(as.factor(missing.rows$date))
+```
+
+The total number of missing values in the dataset is: `r nrow.missing`.
+
+THe missing data happens in 8 dates.
+
+The following codes tend to imput missing value with interval mean steps.
+
+Note the code also processes the filled data with weekday/weekend attribute for the next question.
 
 ```{r echo=TRUE}
 fill_data <- merge(act_data, interval.step, by="interval", suffixes=c("", "_intervalmean"))
@@ -62,13 +77,22 @@ melt.fill.data<-melt(fill_data,id=c("date","interval","week"), measure.vars=c("s
 date.step.f<-dcast(melt.fill.data,date ~ "steps", sum)
     
 with(date.step.f,hist(steps, main="The Total Number of Steps Taken Each Day"))
-    
+```
+
+The filled data seems increase the total frequency of steps between 10000 and 15000.
+
+```{r echo=TRUE}
 mean.date.step.f<-mean(date.step.f$steps,na.rm=TRUE)
 med.date.step.f<-median(date.step.f$steps,na.rm=TRUE)
-    
-print(paste("The mean of the total number of steps taken per day is ", mean.date.step.f, ".", sep=""))
-print(paste("The median of the total number of steps taken per day is ", med.date.step.f, ".", sep=""))
-```
+```    
+
+The mean of the total number of steps taken per day is `r mean.date.step.f`.
+
+The median of the total number of steps taken per day is `r med.date.step.f`.
+
+The mean seems remain the same as un-filled data set, but the median changed.
+
+It could because of that the values used to fill missing data were interval mean. Therefore the mean does not changed, and the median does due to the increased number of datasets.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -77,6 +101,3 @@ week.interval.f<-dcast(melt.fill.data, week + interval ~ "steps", mean)
     
 with(week.interval.f,xyplot(steps ~ interval | week, type="l", layout=c(1,2), xlab="Inteval", ylab="Number of Steps"))
 ```
-
-
-
