@@ -31,7 +31,7 @@ date.step<-dcast(melt.data,date ~ "steps", sum)
 with(date.step,hist(steps,main="The Total Number of Steps Taken Each Day"))
 ```
 
-![](PA1_RMD_files/figure-html/unnamed-chunk-2-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
 ```r
 mean.date.step<-mean(date.step$steps,na.rm=TRUE)
@@ -50,7 +50,7 @@ interval.step<-dcast(melt.data, interval ~ "steps", mean, na.rm=TRUE)
 with(interval.step,plot(interval,steps,type="l", main="The Average Number of Steps Taken per 5-minute Interval"))
 ```
 
-![](PA1_RMD_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 
 ```r
@@ -99,7 +99,7 @@ date.step.f<-dcast(melt.fill.data,date ~ "steps", sum)
 with(date.step.f,hist(steps, main="The Total Number of Steps Taken Each Day"))
 ```
 
-![](PA1_RMD_files/figure-html/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
 The filled data seems increase the total frequency of steps between 10000 and 15000.
 
@@ -126,7 +126,4 @@ week.interval.f<-dcast(melt.fill.data, week + interval ~ "steps", mean)
 with(week.interval.f,xyplot(steps ~ interval | week, type="l", layout=c(1,2), xlab="Inteval", ylab="Number of Steps"))
 ```
 
-![](PA1_RMD_files/figure-html/unnamed-chunk-8-1.png) 
-
-
-
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
