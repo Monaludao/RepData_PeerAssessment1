@@ -1,6 +1,7 @@
 fun1 <- function(){  
     Sys.setlocale("LC_ALL","English")
     library(reshape2)
+    library(lattice)
     
     unzip("activity.zip")
     act_data<-read.csv("activity.csv")
@@ -74,11 +75,11 @@ fun1 <- function(){
     print(paste("The median of the total number of steps taken per day is ",
                 med.date.step.f, ".", sep=""))
     
-    weekday.interval.f<-dcast(subset(melt.fill.data,melt.fill.data$week=="weekday"), 
-                          interval ~ "steps", mean)
-    weekend.interval.f<-dcast(subset(melt.fill.data,melt.fill.data$week=="weekend"), 
-                              interval ~ "steps", mean)
-    par(mfrow=c(2,1))
-    with(weekday.interval.f,plot(interval,steps,type="l"))
-    with(weekend.interval.f,plot(interval,steps,type="l"))
+    week.interval.f<-dcast(melt.fill.data, week + interval ~ "steps", mean)
+    
+    png(file="plot_interval_steps_by_weekday_end.png")
+    with(week.interval.f,xyplot(steps ~ interval | week, type="l", 
+                                layout=c(1,2), xlab="Inteval", 
+                                ylab="Number of Steps"))
+    dev.off()
 }
