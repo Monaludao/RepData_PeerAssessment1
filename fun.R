@@ -5,8 +5,8 @@ fun1 <- function(){
     
     unzip("activity.zip")
     act_data<-read.csv("activity.csv")
-    act_data$date<-as.Date(act_data$date,format="%Y-%m-%d")
     
+    act_data$date<-as.Date(act_data$date,format="%Y-%m-%d")
     melt.data<-melt(act_data,id=c("date","interval"),
                     measure.vars=c("steps"))
     
